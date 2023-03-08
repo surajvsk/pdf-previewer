@@ -1,4 +1,5 @@
 const fs =  require('fs');
+const { Readable } = require('stream');
 exports.fileCopy = function(pdflocation, copypath, absolute_path) {
     return new Promise((resolved, rejected)=>{
         fs.copyFile(pdflocation, copypath, (error) => {
@@ -21,3 +22,26 @@ exports.fileCopy = function(pdflocation, copypath, absolute_path) {
          })
     })
 }
+
+
+exports.createMultiReadStream = function (files) {
+    const streams = files.map((file) => fs.createReadStream(file));
+    let currentStreamIndex = 0;
+  
+    const multiStream = new Readable({
+      read() {
+        const currentStream = streams[currentStreamIndex];
+        if (!currentStream) {
+          this.push(null);
+          return;
+        }
+        currentStream.on('end', () => {
+          currentStreamIndex++;
+          this.read();
+        });
+        currentStream.pipe(this, { end: false });
+      },
+    });
+  
+    return multiStream;
+  }

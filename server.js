@@ -4,7 +4,8 @@ const app = express();
 const port  = 5000;
 const fs =  require('fs');
 const { v4: uuidv4 } = require('uuid');
-const {fileCopy} = require('./utils/index')
+const {fileCopy, createMultiReadStream} = require('./utils/index')
+const multi = require('multistream');
 app.use(express.json({
     limit: "200mb"
   }));
@@ -41,7 +42,8 @@ app.get('/viewpdf', function(req, res, next){
 
 app.get('/stream-pdf', function(req, res, next){
   console.log('STREAM API CALL:::::::::::::::::>>>')
-  let  pdflocation ='C:/Users/SURAJ/Downloads/PDF/public/temp_view/DoctoPdf.pdf';
+  let  pdflocation1 ='C:/Users/SURAJ/Downloads/PDF/public/temp_view/DoctoPdf.pdf';
+  let  pdflocation2 ='C:/Users/SURAJ/Downloads/PDF/public/temp_view/14-to-20-jan-2023.pdf';
 //   fs.readFile(pdflocation, {encoding: 'base64'}, function read(err, data) {
 //     if (err) {
 //         throw err;
@@ -50,16 +52,34 @@ app.get('/stream-pdf', function(req, res, next){
 //     res.json({status:200, file1: data, file2: "file2"})
 // });
 
-  var file = fs.createReadStream(pdflocation);
-  var _file = fs.createReadStream(pdflocation);
-  var stat = fs.statSync(pdflocation);
-  var _stat = fs.statSync(pdflocation);
-  res.setHeader('Content-Length', stat.size);
-  res.setHeader('Content-Length', _stat.size);
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename=DoctoPdf.pdf');
-  file.pipe(res);
-  _file.pipe(res);
+// new multi([
+//   fs.createReadStream(pdflocation1),
+//   fs.createReadStream(pdflocation2)
+// ]).pipe(res);
+
+  // var file = fs.createReadStream(pdflocation);
+  // var _file = fs.createReadStream(pdflocation);
+  // var stat = fs.statSync(pdflocation);
+  // var _stat = fs.statSync(pdflocation);
+  // res.setHeader('Content-Length', stat.size);
+  // res.setHeader('Content-Length', _stat.size);
+  // res.setHeader('Content-Type', 'application/pdf');
+  // res.setHeader('Content-Disposition', 'attachment; filename=DoctoPdf.pdf');
+  // file.pipe(res);
+  // _file.pipe(res);
+
+  const files = [pdflocation1, pdflocation2];
+const multiStream = createMultiReadStream(files);
+
+console.log('multiStream:::::::::',multiStream)
+
+// multiStream.on('data', (chunk) => {
+//   console.log(chunk.toString());
+// });
+
+// multiStream.on('end', () => {
+//   console.log('All files have been read.');
+// });
 })
 
 
