@@ -81,11 +81,13 @@ $("input[name='previewQuestionToggle']").on('change', function(){
 
       function callFetchApi(id, type){
 
-        let request_url = `/view-pdf/${id}/${type}`;
+        let request_url = `/view-pdf`;
         fetch(request_url, {
               method: 'GET',
               headers: {
-                  'Content-Type': 'application/pdf'
+                  'Content-Type': 'application/pdf',
+                  'id': '1',
+                  'type': 'Synoptics'
               },
           }).then((response) => {
                   console.log('API CALLING:::::>>>')

@@ -41,7 +41,7 @@ app.get('/viewpdf', function(req, res, next){
 
 
 
-app.get('/view-pdf/:id/:type', function(req, res, next){
+app.get('/view-pdf', function(req, res, next){
   const {id, type} = {
     ...req.body,
     ...req.body,
@@ -49,11 +49,9 @@ app.get('/view-pdf/:id/:type', function(req, res, next){
   }
 
 
-  console.log('HERE::::::>>', id, type)
+  console.log('HERE::::::>>', req.headers['id'], req.headers['type'])
 
   let  pdflocation = "";// __dirname+'/public/temp_view/14-to-20-jan-2023.pdf';
-
-
   if(type=="QPaper"){
     pdflocation = __dirname+'/public/temp_view/14-to-20-jan-2023.pdf';
   }else{
