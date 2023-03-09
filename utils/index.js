@@ -25,9 +25,12 @@ exports.fileCopy = function(pdflocation, copypath, absolute_path) {
 
 
 exports.createMultiReadStream = function (files) {
+  console.log('files::::::::',files)
     const streams = files.map((file) => fs.createReadStream(file));
     let currentStreamIndex = 0;
   
+    console.log('streams::::::::',streams)
+
     const multiStream = new Readable({
       read() {
         const currentStream = streams[currentStreamIndex];
